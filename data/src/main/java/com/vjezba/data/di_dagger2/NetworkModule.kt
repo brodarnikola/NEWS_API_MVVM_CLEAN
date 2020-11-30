@@ -16,10 +16,12 @@
 
 package com.vjezba.data.di
 
+import android.app.Application
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.vjezba.data.BuildConfig
+import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.data.networking.GithubRepositoryApi
 import dagger.Module
 import dagger.Provides
@@ -79,6 +81,12 @@ class NetworkModule {
         return retrofit
             .build()
             .create(GithubRepositoryApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkUtils(app: Application) : ConnectivityUtil {
+        return ConnectivityUtil(app)
     }
 
 

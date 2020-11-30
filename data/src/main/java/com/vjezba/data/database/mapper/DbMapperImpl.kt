@@ -33,6 +33,7 @@ package com.vjezba.data.database.mapper
 import com.vjezba.data.database.model.DBNews
 import com.vjezba.data.networking.model.ApiNews
 import com.vjezba.domain.model.Articles
+import com.vjezba.domain.model.News
 import io.reactivex.Flowable
 import kotlin.collections.map
 
@@ -40,7 +41,7 @@ class DbMapperImpl : DbMapper {
 
     override fun mapApiNewsToDomainNews(apiNews: ApiNews): com.vjezba.domain.model.News {
         return with(apiNews) {
-            com.vjezba.domain.model.News(
+            News(
                 status,
                 source,
                 sortBy,
@@ -50,7 +51,6 @@ class DbMapperImpl : DbMapper {
     }
 
     override fun mapDomainNewsToDbNews(newsList: ApiNews): List<DBNews> {
-
         return newsList.articles.map {
             with(it) {
                 DBNews(
@@ -64,22 +64,19 @@ class DbMapperImpl : DbMapper {
                 )
             }
         }
-
     }
 
-    override fun mapDBArticlesToArticles(articlesList: List<DBNews>): List<Articles> {
-        return articlesList.map {
-            with(it) {
-                Articles(
-                    id,
-                    author,
-                    title,
-                    description,
-                    url,
-                    urlToImage,
-                    publishedAt
-                )
-            }
+    override fun mapDBNewsListToNormalNewsList(articlesList: DBNews): Articles {
+        return with(articlesList) {
+            Articles(
+                id,
+                author,
+                title,
+                description,
+                url,
+                urlToImage,
+                publishedAt
+            )
         }
     }
 

@@ -19,6 +19,7 @@ package com.vjezba.data.di
 import com.vjezba.data.database.NewsDatabase
 import com.vjezba.data.database.dao.LanguagesDao
 import com.vjezba.data.database.mapper.DbMapper
+import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.data.networking.GithubRepositoryApi
 import com.vjezba.data.repository.NewsRepositoryImpl
 import com.vjezba.domain.repository.NewsRepository
@@ -32,8 +33,8 @@ import dagger.Provides
 class RepositoryModule {
 
     @Provides
-    fun provideAllNewsFromRestApiNetworkOrFromRoom(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper) : NewsRepository {
-        return NewsRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper)
+    fun provideAllNewsFromRestApiNetworkOrFromRoom(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper, connectivityUtil: ConnectivityUtil) : NewsRepository {
+        return NewsRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper, connectivityUtil)
     }
 
     /*@Provides

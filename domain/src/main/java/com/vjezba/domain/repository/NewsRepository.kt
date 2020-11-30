@@ -16,6 +16,7 @@
 
 package com.vjezba.domain.repository
 
+import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.News
 import io.reactivex.Flowable
 
@@ -23,5 +24,5 @@ import io.reactivex.Flowable
 interface NewsRepository {
 
     // practice of rxjava2
-    fun getNews() : Flowable<News>
+    suspend fun getNews() : Flowable<News>
 }

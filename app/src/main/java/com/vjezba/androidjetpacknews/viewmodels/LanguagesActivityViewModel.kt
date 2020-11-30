@@ -22,12 +22,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.News
 import com.vjezba.domain.repository.NewsRepository
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,7 +48,7 @@ class LanguagesActivityViewModel @Inject constructor(
     val newsList: LiveData<News> = _newsMutableLiveData
 
     fun deleteAllSavedProgrammingLanguagesOfUser() {
-        //viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             savedLanguages.getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +75,7 @@ class LanguagesActivityViewModel @Inject constructor(
 
                     override fun onComplete() {}
                 })
-        //}
+        }
     }
 
 }

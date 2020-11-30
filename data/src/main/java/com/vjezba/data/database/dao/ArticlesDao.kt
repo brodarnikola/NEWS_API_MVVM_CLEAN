@@ -40,15 +40,11 @@ import io.reactivex.Flowable
 @Dao
 interface ArticlesDao {
 
-//  @Query("SELECT * FROM news_table")
-//  fun getNews(): Flow<List<DBNews>>
-
+  @Query("SELECT * FROM news_table")
+  fun getNewsRxJava2(): Flowable<List<DBNews>>
 
   @Query("SELECT * FROM news_table")
-  fun getNewsRxJava2(): Flowable<DBNews>
-
-  @Query("SELECT * FROM news_table")
-  fun getNews(): List<DBNews>
+  suspend fun getNews(): List<DBNews>
 
   @Transaction
   suspend fun updateNews(articles: List<DBNews>) {

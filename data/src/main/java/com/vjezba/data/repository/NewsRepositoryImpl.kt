@@ -20,68 +20,68 @@ import android.util.Log
 import com.vjezba.data.database.NewsDatabase
 import com.vjezba.data.database.mapper.DbMapper
 import com.vjezba.data.database.model.DBNews
+import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.data.networking.GithubRepositoryApi
 import com.vjezba.data.networking.model.ApiNews
-import com.vjezba.data.networking.model.mapToNewsDomain
+import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.News
 import com.vjezba.domain.repository.NewsRepository
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import java.lang.Exception
-import java.net.UnknownHostException
-import java.util.concurrent.Flow
 
 /**
  * RepositoryResponseApi module for handling data operations.
  */
-class NewsRepositoryImpl  constructor(
+class NewsRepositoryImpl constructor(
     private val dbNews: NewsDatabase,
     private val service: GithubRepositoryApi,
-    private val dbMapper: DbMapper?)
-    : NewsRepository   {
-
-    private var initDatabaseNewsList: MutableList<DBNews> = mutableListOf()
+    private val dbMapper: DbMapper?,
+    private val connectivityUtil: ConnectivityUtil
+) : NewsRepository {
 
     // example, practice of rxjava2
-    override fun getNews(): Flowable<News> {
-        return try {
-            val repositoryResult = service.searchGithubRepositoryWithFlowable() //.map { dbMapper!!.mapDomainNewsToDbNews(it) }!! //?: Flowable<RepositoryResponse(0, false, listOf<RepositoryDetailsResponse>())>
+    override suspend fun getNews(): Flowable<News> {
+        if (connectivityUtil.isConnectedToInternet()) {
+            val newsResult = service.searchGithubRepositoryWithFlowable()
 
-            //var newsFromRxjava2 = DBNews("", "", "", listOf())
-            //val news = repositoryResult.doOnNext { newsFromRxjava2 = it.mapToNewsDomain() }
+            insertNewsIntoDB(newsResult)
 
-            repositoryResult.doOnNext {
-                val test = dbMapper?.mapDomainNewsToDbNews(it) ?: listOf()
-                dbNews.newsDao().insertAllNews(test)
-            }
+            //Observable.concatArrayEager(newsResult, observableFromDB)
 
-            val observableFromDB = dbNews.newsDao().getNewsRxJava2()
+            val correctNewsResult = newsResult.map { dbMapper?.mapApiNewsToDomainNews(it)!! }
 
-            //Observable.concatArrayEager(repositoryResult, observableFromDB)
-
-            //Observable.concatArray(repositoryResult, observableFromDB)
-
-            val testFlowable = repositoryResult.map { dbMapper?.mapApiNewsToDomainNews(it)!! }  ?: Flowable.just(News("","","", listOf()))
-
-            return testFlowable
+            return correctNewsResult
+        } else {
+            val listDbArticles = getArticlesFromDb()
+            return Flowable.just(News("", "", "", listDbArticles))
         }
-        /*catch (e: UnknownHostException) {
-            // if user does not have network connection, then display old data from room, but only once
-            if( !initDatabaseNewsList.containsAll(dbNews.newsDao().getNews())  ) {
-                val listDbArticles = dbNews.newsDao().getNews()
-                val listArticles = dbMapper?.mapDBArticlesToArticles(listDbArticles)
-                initDatabaseNewsList.addAll(listDbArticles)
-                Log.d("Da li ce uci sim", "Da li ce uci sim. prikazujemo stare podatke od room, od nase baze podatakaa")
-                val proba = dbNews.newsDao().getNewsRxJava2()
-                //Result.Success(listArticles)
-            }
-            else {
-                Log.d("Da li ce uci sim", "Da li ce uci sim. saljemo prazno listu")
-                return Flowable.just(News("","","", listOf()))
-            }
+    }
+
+    private fun insertNewsIntoDB(repositoryResult: Flowable<ApiNews>) {
+        dbNews.newsDao().insertAllNews(
+            dbMapper?.mapDomainNewsToDbNews(repositoryResult.blockingFirst()) ?: listOf()
+        )
+        Log.d(
+            "da li ce uci unutra * ",
+            "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString() )
+
+        /*repositoryResult.doOnNext {
+            Log.d("da li ce uci unutra * ", "da li ce uci unutra, spremiti podatke u bazu podataka: " + it.toString())
+            val test = dbMapper?.mapDomainNewsToDbNews(it) ?: listOf()
+            dbNews.newsDao().insertAllNews(test)
         }*/
-        catch (e: Exception) {
-            return Flowable.just(News("","","", listOf()))
+    }
+
+    private suspend fun getArticlesFromDb(): List<Articles> {
+        return dbNews.newsDao().getNews().map {
+            dbMapper?.mapDBNewsListToNormalNewsList(it) ?: Articles(
+                0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
         }
     }
 

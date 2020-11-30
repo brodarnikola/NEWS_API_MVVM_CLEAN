@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vjezba.androidjetpacknews.R
@@ -17,6 +18,8 @@ import com.vjezba.domain.model.Articles
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import kotlinx.android.synthetic.main.activity_news.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -39,10 +42,6 @@ class LanguagesActivity : AppCompatActivity(), HasActivityInjector {
         setContentView(R.layout.activity_news)
 
         languagesActivityViewModel = injectViewModel(viewModelFactory)
-
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
     }
 
     override fun onStart() {
@@ -69,7 +68,9 @@ class LanguagesActivity : AppCompatActivity(), HasActivityInjector {
             //adapter.setRepos(repos.items.toMutableList())
         })
 
-        languagesActivityViewModel.deleteAllSavedProgrammingLanguagesOfUser()
+        //lifecycleScope.launch(Dispatchers.IO) {
+            languagesActivityViewModel.deleteAllSavedProgrammingLanguagesOfUser()
+        //}
         //io.reactivex.Observable.just(languagesActivityViewModel.deleteAllSavedProgrammingLanguagesOfUser())
 
     }

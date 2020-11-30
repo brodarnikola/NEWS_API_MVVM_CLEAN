@@ -19,6 +19,7 @@ package com.vjezba.data.networking
 
 import com.vjezba.data.networking.model.ApiNews
 import io.reactivex.Flowable
+import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Headers
 
