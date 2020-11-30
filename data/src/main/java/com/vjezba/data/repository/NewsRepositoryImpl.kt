@@ -16,8 +16,10 @@
 
 package com.vjezba.data.repository
 
+import android.util.Log
 import com.vjezba.data.database.NewsDatabase
 import com.vjezba.data.database.mapper.DbMapper
+import com.vjezba.data.database.model.DBNews
 import com.vjezba.data.networking.GithubRepositoryApi
 import com.vjezba.data.networking.model.ApiNews
 import com.vjezba.data.networking.model.mapToNewsDomain
@@ -26,6 +28,7 @@ import com.vjezba.domain.repository.NewsRepository
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import java.lang.Exception
+import java.net.UnknownHostException
 import java.util.concurrent.Flow
 
 /**
@@ -37,6 +40,7 @@ class NewsRepositoryImpl  constructor(
     private val dbMapper: DbMapper?)
     : NewsRepository   {
 
+    private var initDatabaseNewsList: MutableList<DBNews> = mutableListOf()
 
     // example, practice of rxjava2
     override fun getNews(): Flowable<News> {
@@ -61,6 +65,21 @@ class NewsRepositoryImpl  constructor(
 
             return testFlowable
         }
+        /*catch (e: UnknownHostException) {
+            // if user does not have network connection, then display old data from room, but only once
+            if( !initDatabaseNewsList.containsAll(dbNews.newsDao().getNews())  ) {
+                val listDbArticles = dbNews.newsDao().getNews()
+                val listArticles = dbMapper?.mapDBArticlesToArticles(listDbArticles)
+                initDatabaseNewsList.addAll(listDbArticles)
+                Log.d("Da li ce uci sim", "Da li ce uci sim. prikazujemo stare podatke od room, od nase baze podatakaa")
+                val proba = dbNews.newsDao().getNewsRxJava2()
+                //Result.Success(listArticles)
+            }
+            else {
+                Log.d("Da li ce uci sim", "Da li ce uci sim. saljemo prazno listu")
+                return Flowable.just(News("","","", listOf()))
+            }
+        }*/
         catch (e: Exception) {
             return Flowable.just(News("","","", listOf()))
         }
