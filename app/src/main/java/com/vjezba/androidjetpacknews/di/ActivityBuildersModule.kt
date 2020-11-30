@@ -9,7 +9,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBuildersModule {
     @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
-    abstract fun contributeMainActivity(): LanguagesActivity
+    abstract fun contributeMainActivity(): NewsActivity
 
     //@ContributesAndroidInjector()
     //abstract fun contributeRepositoriesActivity(): RxJava2FlowableToLiveDataFragment

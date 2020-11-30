@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vjezba.androidjetpacknews.R
@@ -18,12 +17,10 @@ import com.vjezba.domain.model.Articles
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import kotlinx.android.synthetic.main.activity_news.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class LanguagesActivity : AppCompatActivity(), HasActivityInjector {
+class NewsActivity : AppCompatActivity(), HasActivityInjector {
 
     @Inject
     lateinit var dispatchingAndroidActivityInjector: DispatchingAndroidInjector<Activity>
@@ -57,7 +54,7 @@ class LanguagesActivity : AppCompatActivity(), HasActivityInjector {
 
         news_list.adapter = newsAdapter
 
-        languagesActivityViewModel.newsList.observe(this@LanguagesActivity, Observer { repos ->
+        languagesActivityViewModel.newsList.observe(this@NewsActivity, Observer { repos ->
             Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${repos.articles.joinToString { "-" }}")
             newsAdapter.setItems(repos.articles)
 //            hideOrShowRecyclerViewAndProgressBar(

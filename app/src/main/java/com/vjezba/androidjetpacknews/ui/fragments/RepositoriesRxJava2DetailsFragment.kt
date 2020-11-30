@@ -24,7 +24,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.vjezba.androidjetpacknews.databinding.FragmentRepositoriesDetailsBinding
-import kotlinx.android.synthetic.main.activity_languages_main.*
 
 
 class RepositoriesRxJava2DetailsFragment : Fragment() {
@@ -51,9 +50,6 @@ class RepositoriesRxJava2DetailsFragment : Fragment() {
         repositoryDescription = binding.repositoryDescription
 
         setDetailsAboutLanguage()
-
-        activity?.speedDial?.visibility = View.GONE
-        activity?.toolbar?.title = "Repository details"
 
         return binding.root
     }

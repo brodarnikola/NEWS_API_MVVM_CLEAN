@@ -20,7 +20,6 @@ import com.vjezba.androidjetpacknews.di.Injectable
 import com.vjezba.androidjetpacknews.di.ViewModelFactory
 import com.vjezba.androidjetpacknews.di.injectViewModel
 import com.vjezba.androidjetpacknews.viewmodels.RepositoriesRxJava2ViewModel
-import kotlinx.android.synthetic.main.activity_languages_main.*
 import javax.inject.Inject
 
 
@@ -50,9 +49,6 @@ class RepositoriesRxJava2Fragment : Fragment(), Injectable {
 
         val binding = FragmentRepositoriesBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        activity?.speedDial?.visibility = View.GONE
-        activity?.toolbar?.title = getString(R.string.menu_rxjava2_example)
 
         initializeViews(binding)
         search()

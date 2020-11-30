@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.vjezba.androidjetpacknews.R
 import com.vjezba.androidjetpacknews.databinding.FragmentRxjava2FlowableToLivedataDetailsBinding
-import kotlinx.android.synthetic.main.activity_languages_main.*
 import kotlinx.android.synthetic.main.fragment_rxjava2_flowable_to_livedata_details.*
 
 
@@ -46,9 +45,6 @@ class RxJava2FlowableToLiveDataDetailsFragment : Fragment() {
 
         val binding = FragmentRxjava2FlowableToLivedataDetailsBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        activity?.speedDial?.visibility = View.GONE
-        activity?.toolbar?.title = getString(R.string.gallery_title)
 
         repositoryName = binding.repositoryName
         lastUpdateTime = binding.lastUpdateTimeValue

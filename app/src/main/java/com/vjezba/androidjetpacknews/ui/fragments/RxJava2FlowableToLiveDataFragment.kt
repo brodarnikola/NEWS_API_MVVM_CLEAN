@@ -22,7 +22,6 @@ import com.vjezba.androidjetpacknews.viewmodels.RxJava2FlowableToLiveDataViewMod
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.activity_languages_main.*
 import kotlinx.android.synthetic.main.fragment_rxjava2_flowablet_to_livedata.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -53,9 +52,6 @@ class RxJava2FlowableToLiveDataFragment : Fragment(), Injectable {
 
         binding = FragmentRxjava2FlowabletToLivedataBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        activity?.speedDial?.visibility = View.GONE
-        activity?.toolbar?.title = getString(R.string.gallery_title)
 
         return binding.root
     }
