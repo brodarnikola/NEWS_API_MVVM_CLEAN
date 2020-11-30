@@ -30,18 +30,12 @@
 
 package com.vjezba.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import com.vjezba.data.database.model.DBNews
 import io.reactivex.Flowable
 
 @Dao
 interface ArticlesDao {
-
-  @Query("SELECT * FROM news_table")
-  fun getNewsRxJava2(): Flowable<List<DBNews>>
 
   @Query("SELECT * FROM news_table")
   suspend fun getNews(): List<DBNews>
@@ -52,7 +46,7 @@ interface ArticlesDao {
     insertAllNews(articles)
   }
 
-  @Insert
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertAllNews(articles: List<DBNews>)
 
 
