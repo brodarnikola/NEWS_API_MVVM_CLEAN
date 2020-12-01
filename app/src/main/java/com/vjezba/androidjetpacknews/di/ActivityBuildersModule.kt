@@ -8,8 +8,12 @@ import dagger.android.ContributesAndroidInjector
 @Suppress("unused")
 @Module
 abstract class ActivityBuildersModule {
+
     @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
-    abstract fun contributeMainActivity(): NewsActivity
+    abstract fun contributeNewsActivity(): NewsActivity
+
+    @ContributesAndroidInjector()
+    abstract fun contributeNewsDetailsActivity(): NewsDetailsActivity
 
     //@ContributesAndroidInjector()
     //abstract fun contributeRepositoriesActivity(): RxJava2FlowableToLiveDataFragment

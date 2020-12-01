@@ -25,4 +25,6 @@ interface NewsRepository {
 
     // practice of rxjava2
     suspend fun getNews() : Flowable<News>
+
+    suspend fun getNewsFromLocalDatabaseRoom() : Flowable<News>
 }

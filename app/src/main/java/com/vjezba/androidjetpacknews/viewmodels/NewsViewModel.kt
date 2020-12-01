@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class LanguagesActivityViewModel @Inject constructor(
+class NewsViewModel @Inject constructor(
     val savedLanguages: NewsRepository
 ) : ViewModel() {
 
@@ -47,7 +47,7 @@ class LanguagesActivityViewModel @Inject constructor(
 
     val newsList: LiveData<News> = _newsMutableLiveData
 
-    fun deleteAllSavedProgrammingLanguagesOfUser() {
+    fun getNewsFromServer() {
         viewModelScope.launch(Dispatchers.IO) {
             savedLanguages.getNews()
                 .subscribeOn(Schedulers.io())

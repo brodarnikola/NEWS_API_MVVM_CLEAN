@@ -19,7 +19,6 @@ package com.vjezba.data.repository
 import android.util.Log
 import com.vjezba.data.database.NewsDatabase
 import com.vjezba.data.database.mapper.DbMapper
-import com.vjezba.data.database.model.DBNews
 import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.data.networking.GithubRepositoryApi
 import com.vjezba.data.networking.model.ApiNews
@@ -41,7 +40,7 @@ class NewsRepositoryImpl constructor(
     // example, practice of rxjava2
     override suspend fun getNews(): Flowable<News> {
         if (connectivityUtil.isConnectedToInternet()) {
-            val newsResult = service.searchGithubRepositoryWithFlowable()
+            val newsResult = service.searchNewsWithFlowable()
 
             insertNewsIntoDB(newsResult)
 
@@ -83,6 +82,10 @@ class NewsRepositoryImpl constructor(
                 ""
             )
         }
+    }
+
+    override suspend fun getNewsFromLocalDatabaseRoom(): Flowable<News> {
+        return Flowable.just(News("", "", "", listOf()))
     }
 
 

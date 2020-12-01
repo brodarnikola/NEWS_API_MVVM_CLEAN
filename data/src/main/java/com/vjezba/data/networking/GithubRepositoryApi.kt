@@ -28,7 +28,7 @@ interface GithubRepositoryApi {
 
     @GET("articles?source=bbc-news&sortBy=top&apiKey=6e005ad0a1134ed89108da1fe290a141")
     @Headers("Content-Type: application/json")
-    fun searchGithubRepositoryWithFlowable(
+    fun searchNewsWithFlowable(
     ): Flowable<ApiNews>
 
 

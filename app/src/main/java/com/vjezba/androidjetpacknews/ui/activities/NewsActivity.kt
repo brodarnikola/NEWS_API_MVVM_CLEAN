@@ -2,6 +2,7 @@ package com.vjezba.androidjetpacknews.ui.activities
 
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,7 @@ import com.vjezba.androidjetpacknews.R
 import com.vjezba.androidjetpacknews.di.ViewModelFactory
 import com.vjezba.androidjetpacknews.di.injectViewModel
 import com.vjezba.androidjetpacknews.ui.adapters.NewsAdapter
-import com.vjezba.androidjetpacknews.viewmodels.LanguagesActivityViewModel
+import com.vjezba.androidjetpacknews.viewmodels.NewsViewModel
 import com.vjezba.domain.model.Articles
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -29,7 +30,7 @@ class NewsActivity : AppCompatActivity(), HasActivityInjector {
 
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    lateinit var languagesActivityViewModel: LanguagesActivityViewModel
+    lateinit var newsViewModel: NewsViewModel
 
     private lateinit var newsAdapter: NewsAdapter
     val newsLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -38,7 +39,7 @@ class NewsActivity : AppCompatActivity(), HasActivityInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
 
-        languagesActivityViewModel = injectViewModel(viewModelFactory)
+        newsViewModel = injectViewModel(viewModelFactory)
     }
 
     override fun onStart() {
@@ -54,7 +55,7 @@ class NewsActivity : AppCompatActivity(), HasActivityInjector {
 
         news_list.adapter = newsAdapter
 
-        languagesActivityViewModel.newsList.observe(this@NewsActivity, Observer { repos ->
+        newsViewModel.newsList.observe(this@NewsActivity, Observer { repos ->
             Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${repos.articles.joinToString { "-" }}")
             newsAdapter.setItems(repos.articles)
 //            hideOrShowRecyclerViewAndProgressBar(
@@ -66,16 +67,16 @@ class NewsActivity : AppCompatActivity(), HasActivityInjector {
         })
 
         //lifecycleScope.launch(Dispatchers.IO) {
-            languagesActivityViewModel.deleteAllSavedProgrammingLanguagesOfUser()
+            newsViewModel.getNewsFromServer()
         //}
-        //io.reactivex.Observable.just(languagesActivityViewModel.deleteAllSavedProgrammingLanguagesOfUser())
+        //io.reactivex.Observable.just(newsViewModel.deleteAllSavedProgrammingLanguagesOfUser())
 
     }
 
     private fun setArticlesClickListener( position: Int) {
-//        val intent = Intent( this, NewsDetailsActivity::class.java )
-//        intent.putExtra("listPosition", position)
-//        startActivity(intent)
+        val intent = Intent( this, NewsDetailsActivity::class.java )
+        intent.putExtra("listPosition", position)
+        startActivity(intent)
     }
 
 }

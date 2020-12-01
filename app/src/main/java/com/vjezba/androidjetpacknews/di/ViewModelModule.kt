@@ -12,11 +12,18 @@ import dagger.multibindings.IntoMap
 abstract class ViewModelModule {
 
 
-    // programing languages viewmodels
+    // news viewmodels
     @Binds
     @IntoMap
-    @ViewModelKey(LanguagesActivityViewModel::class)
-    abstract fun bindLanguagesActivityViewModel(viewModel: LanguagesActivityViewModel): ViewModel
+    @ViewModelKey(NewsViewModel::class)
+    abstract fun bindNewsActivityiViewModel(viewModel: NewsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewsDetailsViewModel::class)
+    abstract fun bindNewsDetailsActivityViewModel(viewModel: NewsDetailsViewModel): ViewModel
+
+
 
     // rxjava2 example with viewmodels
     @Binds
