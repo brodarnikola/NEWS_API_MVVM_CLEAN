@@ -26,6 +26,7 @@ import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.News
 import com.vjezba.domain.repository.NewsRepository
 import io.reactivex.Flowable
+import java.util.concurrent.Flow
 
 /**
  * RepositoryResponseApi module for handling data operations.
@@ -55,19 +56,13 @@ class NewsRepositoryImpl constructor(
         }
     }
 
-    private fun insertNewsIntoDB(repositoryResult: Flowable<ApiNews>) {
-        dbNews.newsDao().insertAllNews(
+    private suspend fun insertNewsIntoDB(repositoryResult: Flowable<ApiNews>) {
+        dbNews.newsDao().updateNews(
             dbMapper?.mapDomainNewsToDbNews(repositoryResult.blockingFirst()) ?: listOf()
         )
         Log.d(
             "da li ce uci unutra * ",
             "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString() )
-
-        /*repositoryResult.doOnNext {
-            Log.d("da li ce uci unutra * ", "da li ce uci unutra, spremiti podatke u bazu podataka: " + it.toString())
-            val test = dbMapper?.mapDomainNewsToDbNews(it) ?: listOf()
-            dbNews.newsDao().insertAllNews(test)
-        }*/
     }
 
     private suspend fun getArticlesFromDb(): List<Articles> {
@@ -84,8 +79,16 @@ class NewsRepositoryImpl constructor(
         }
     }
 
-    override suspend fun getNewsFromLocalDatabaseRoom(): Flowable<News> {
-        return Flowable.just(News("", "", "", listOf()))
+    override suspend fun getNewsFromLocalDatabaseRoom(): Flowable<List<Articles>> {
+        val resultRoom = dbNews.newsDao().getNews().map {
+            dbMapper?.mapDBNewsListToNormalNewsList(it) ?: Articles()
+        }
+
+        return Flowable.fromArray(resultRoom)
+        // Or we could return Flowable.just(News("", "", "", resultRoom)) from domain News..
+        // we just need to add this resultRoom to
+        // status, source, soryBy will be empty, because we don't need this data
+        //return Flowable.just(News("", "", "", resultRoom))
     }
 
 

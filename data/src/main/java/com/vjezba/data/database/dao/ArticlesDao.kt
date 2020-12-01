@@ -46,14 +46,12 @@ interface ArticlesDao {
     insertAllNews(articles)
   }
 
+  @Query("DELETE FROM news_table")
+  suspend fun clearNews()
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertAllNews(articles: List<DBNews>)
 
 
-  @Insert
-  fun insertNews(articles: DBNews)
-
-  @Query("DELETE FROM news_table")
-  suspend fun clearNews()
 
 }

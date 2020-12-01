@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.News
 import com.vjezba.domain.repository.NewsRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,28 +40,30 @@ class NewsDetailsViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _newsDetailsMutableLiveData = MutableLiveData<News>().apply {
-        value = News("", "", "", listOf())
+    private val _newsDetailsMutableLiveData = MutableLiveData<List<Articles>>().apply {
+        value = listOf()
     }
 
-    val newsDetailsList: LiveData<News> = _newsDetailsMutableLiveData
+    val newsDetailsList: LiveData<List<Articles>> = _newsDetailsMutableLiveData
 
     fun getNewsFromLocalDatabaseRoom() {
         viewModelScope.launch(Dispatchers.IO) {
-            savedLanguages.getNews()
+            savedLanguages.getNewsFromLocalDatabaseRoom()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
-                .subscribe(object : io.reactivex.Observer<News> {
+                .subscribe(object : io.reactivex.Observer<List<Articles>> {
                     override fun onSubscribe(d: Disposable) {
                         compositeDisposable.add(d)
                     }
 
-                    override fun onNext(response: News) {
+                    override fun onNext(response: List<Articles>) {
                         Log.d(ContentValues.TAG, "Da li ce uci sim EEEE: ${response}")
 
                         _newsDetailsMutableLiveData.value?.let { news ->
                             _newsDetailsMutableLiveData.value = response
+
+                            Log.d(ContentValues.TAG, "Da li ce uci sim FFFFFF: ${_newsDetailsMutableLiveData.value!!.size}")
                         }
                     }
 

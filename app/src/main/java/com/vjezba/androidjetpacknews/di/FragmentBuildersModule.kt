@@ -11,6 +11,10 @@ abstract class FragmentBuildersModule {
 
 
     @ContributesAndroidInjector
+    abstract fun contributeNewsDetailsFragment(): IntroViewPagerFragment
+
+
+    @ContributesAndroidInjector
     abstract fun contributeRepositoriesSearchFragment(): RepositoriesRxJava2Fragment
 
 

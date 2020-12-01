@@ -19,7 +19,6 @@ package com.vjezba.data.di
 import android.app.Application
 import com.vjezba.data.database.NewsDatabase
 import com.vjezba.data.database.dao.ArticlesDao
-import com.vjezba.data.database.dao.LanguagesDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

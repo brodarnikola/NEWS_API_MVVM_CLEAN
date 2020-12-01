@@ -1,10 +1,11 @@
 package com.vjezba.androidjetpacknews.ui.activities
 
 import android.app.Activity
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,15 +16,14 @@ import com.vjezba.androidjetpacknews.di.injectViewModel
 import com.vjezba.androidjetpacknews.ui.adapters.NewsDetailsRecyclerViewAdapter
 import com.vjezba.androidjetpacknews.ui.fragments.IntroViewPagerFragment
 import com.vjezba.androidjetpacknews.ui.utilities.PagerNewsDetailsDecorator
-import com.vjezba.androidjetpacknews.viewmodels.NewsViewModel
-import com.vjezba.domain.model.Articles
-import dagger.android.AndroidInjector
+import com.vjezba.androidjetpacknews.viewmodels.NewsDetailsViewModel
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_news_details.*
 import javax.inject.Inject
 
-class NewsDetailsActivity : AppCompatActivity(), HasActivityInjector  {
+class NewsDetailsActivity : AppCompatActivity(), HasActivityInjector, HasSupportFragmentInjector {
 
     var position = 0
 
@@ -32,8 +32,13 @@ class NewsDetailsActivity : AppCompatActivity(), HasActivityInjector  {
 
     override fun activityInjector() = dispatchingAndroidActivityInjector
 
+    @Inject
+    lateinit var dispatchingAndroidFragmentInjector:  DispatchingAndroidInjector<androidx.fragment.app.Fragment>
+
+    override fun supportFragmentInjector() = dispatchingAndroidFragmentInjector
+
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    lateinit var newsDetailsViewModel: NewsViewModel
+    lateinit var newsDetailsViewModel: NewsDetailsViewModel
 
     private var dataFetched = false
 
@@ -106,39 +111,20 @@ class NewsDetailsActivity : AppCompatActivity(), HasActivityInjector  {
     private fun getDataOnlyOnce() {
         if( !dataFetched ) {
 
-            newsDetailsViewModel.newsList.observe(this, Observer { news ->
+            progressBar.visibility = View.VISIBLE
+            Log.d(ContentValues.TAG, "Da li ce uci sim BORUSIA MONCHEN GLADBACH: ")
+            newsDetailsViewModel.newsDetailsList.observe(this, Observer { news ->
 
+                progressBar.visibility = View.GONE
                 dataFetched = true
 
-                newDetailsRecyclerViewAdapter.updateDevices(news.articles.toMutableList())
+                newDetailsRecyclerViewAdapter.updateDevices(news.toMutableList())
                 recylcerViewData.scrollToPosition(position)
             })
 
-            newsDetailsViewModel.getNewsFromServer()
+            newsDetailsViewModel.getNewsFromLocalDatabaseRoom()
         }
     }
-
-
-    /*override fun displayNewsDetails(newsDetails: List<Articles>) {
-        dataFetched = true
-
-        newDetailsRecyclerViewAdapter.updateDevices(newsDetails.toMutableList())
-        recylcerViewData.scrollToPosition(position)
-    }
-
-    override fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun showProgress() {
-        progressBar.show()
-    }
-
-    override fun hideProgress() {
-        progressBar.hide()
-    }*/
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {

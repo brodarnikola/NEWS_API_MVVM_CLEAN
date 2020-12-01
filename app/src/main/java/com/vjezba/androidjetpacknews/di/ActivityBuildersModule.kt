@@ -12,10 +12,7 @@ abstract class ActivityBuildersModule {
     @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
     abstract fun contributeNewsActivity(): NewsActivity
 
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
     abstract fun contributeNewsDetailsActivity(): NewsDetailsActivity
-
-    //@ContributesAndroidInjector()
-    //abstract fun contributeRepositoriesActivity(): RxJava2FlowableToLiveDataFragment
 
 }

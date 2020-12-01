@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,15 +56,10 @@ class NewsActivity : AppCompatActivity(), HasActivityInjector {
 
         news_list.adapter = newsAdapter
 
-        newsViewModel.newsList.observe(this@NewsActivity, Observer { repos ->
-            Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${repos.articles.joinToString { "-" }}")
-            newsAdapter.setItems(repos.articles)
-//            hideOrShowRecyclerViewAndProgressBar(
-//                showRecyclerView = true,
-//                showProgressBar = false
-//            )
-            //adapter.notifyItemRangeRemoved(0, adapter.itemCount)
-            //adapter.setRepos(repos.items.toMutableList())
+        newsViewModel.newsList.observe(this@NewsActivity, Observer { news ->
+            Log.d(ContentValues.TAG, "Da li ce uci sim uuuuuu: ${news.articles.joinToString { "-" }}")
+            progressBar.visibility = View.GONE
+            newsAdapter.updateDevices(news.articles.toMutableList())
         })
 
         //lifecycleScope.launch(Dispatchers.IO) {

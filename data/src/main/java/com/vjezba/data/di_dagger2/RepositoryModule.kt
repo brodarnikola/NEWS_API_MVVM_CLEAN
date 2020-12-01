@@ -17,7 +17,6 @@
 package com.vjezba.data.di
 
 import com.vjezba.data.database.NewsDatabase
-import com.vjezba.data.database.dao.LanguagesDao
 import com.vjezba.data.database.mapper.DbMapper
 import com.vjezba.data.networking.ConnectivityUtil
 import com.vjezba.data.networking.GithubRepositoryApi
