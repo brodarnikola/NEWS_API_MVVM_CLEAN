@@ -25,9 +25,7 @@ import com.vjezba.domain.repository.NewsRepository
 import dagger.Module
 import dagger.Provides
 
-/**
- * Type converters to allow Room to reference complex data types.
- */
+
 @Module
 class RepositoryModule {
 
@@ -35,19 +33,4 @@ class RepositoryModule {
     fun provideAllNewsFromRestApiNetworkOrFromRoom(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper, connectivityUtil: ConnectivityUtil) : NewsRepository {
         return NewsRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper, connectivityUtil)
     }
-
-    /*@Provides
-    fun provideAllLanguagesFromRestApiNetwork(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper) : GithubRepository {
-        return GithubRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper)
-    }
-
-    @Provides
-    fun provideGetAllSavedLanguages(savedLanguageDao : SavedLanguagesDAO, dbMapper : DbMapper) : SavedLanguagesRepository {
-        return SavedLanguagesRepositoryImpl(savedLanguageDao, dbMapper)
-    }
-
-    @Provides
-    fun provideGetAllLanguages(languagesDao : LanguagesDao, dbMapper : DbMapper) : LanguagesRepository {
-        return LanguagesRepositoryImpl(languagesDao, dbMapper)
-    }*/
 }

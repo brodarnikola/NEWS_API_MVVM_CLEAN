@@ -11,7 +11,6 @@ import dagger.multibindings.IntoMap
 @Module
 abstract class ViewModelModule {
 
-
     // news viewmodels
     @Binds
     @IntoMap
@@ -22,18 +21,5 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NewsDetailsViewModel::class)
     abstract fun bindNewsDetailsActivityViewModel(viewModel: NewsDetailsViewModel): ViewModel
-
-
-
-    // rxjava2 example with viewmodels
-    @Binds
-    @IntoMap
-    @ViewModelKey(RepositoriesRxJava2ViewModel::class)
-    abstract fun bindRepositoriesRxJava2ViewModel(viewModel: RepositoriesRxJava2ViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(RxJava2FlowableToLiveDataViewModel::class)
-    abstract fun bindRxJava2FlowableToLiveDataViewModel(viewModel: RxJava2FlowableToLiveDataViewModel): ViewModel
 
 }

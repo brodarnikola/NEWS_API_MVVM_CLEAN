@@ -21,9 +21,7 @@ import com.vjezba.data.database.mapper.DbMapperImpl
 import dagger.Module
 import dagger.Provides
 
-/**
- * Type converters to allow Room to reference complex data types.
- */
+
 @Module
 class MapperModule {
 

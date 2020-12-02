@@ -28,7 +28,7 @@ class DatabaseModule {
 
    @Singleton
     @Provides
-    fun provideAppDatabase( app: Application) = NewsDatabase.create(app)  //.getInstance(app)
+    fun provideAppDatabase( app: Application) = NewsDatabase.create(app)
 
     @Provides
     fun providePlantDao(newsDatabase: NewsDatabase): ArticlesDao {

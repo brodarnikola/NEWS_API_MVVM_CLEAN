@@ -26,7 +26,7 @@ import retrofit2.http.Headers
 
 interface GithubRepositoryApi {
 
-    @GET("articles?source=bbc-news&sortBy=top&apiKey=6e005ad0a1134ed89108da1fe290a141")
+    @GET("articles?source=bbc-news&sortBy=top&apiKey=b0124155d6224507b85f340dcbf20df4")
     @Headers("Content-Type: application/json")
     fun searchNewsWithFlowable(
     ): Flowable<ApiNews>
