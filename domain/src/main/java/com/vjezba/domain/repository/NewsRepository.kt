@@ -24,7 +24,7 @@ import io.reactivex.Flowable
 interface NewsRepository {
 
     // practice of rxjava2
-    suspend fun getNews() : Flowable<News>
+     fun getNews() : Flowable<News>
 
     suspend fun getNewsFromLocalDatabaseRoom() : Flowable<List<Articles>>
 }

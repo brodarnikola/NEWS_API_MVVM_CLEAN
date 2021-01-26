@@ -34,49 +34,18 @@ import java.util.concurrent.Flow
 class NewsRepositoryImpl constructor(
     private val dbNews: NewsDatabase,
     private val service: GithubRepositoryApi,
-    private val dbMapper: DbMapper?,
-    private val connectivityUtil: ConnectivityUtil
+    private val dbMapper: DbMapper?
 ) : NewsRepository {
 
     // example, practice of rxjava2
-    override suspend fun getNews(): Flowable<News> {
-        if (connectivityUtil.isConnectedToInternet()) {
-            val newsResult = service.searchNewsWithFlowable()
+    override fun getNews(): Flowable<News> {
+        val newsResult = service.searchNewsWithFlowable()
 
-            insertNewsIntoDB(newsResult)
+        //Observable.concatArrayEager(newsResult, observableFromDB)
 
-            //Observable.concatArrayEager(newsResult, observableFromDB)
+        val correctNewsResult = newsResult.map { dbMapper?.mapApiNewsToDomainNews(it)!! }
 
-            val correctNewsResult = newsResult.map { dbMapper?.mapApiNewsToDomainNews(it)!! }
-
-            return correctNewsResult
-        } else {
-            val listDbArticles = getArticlesFromDb()
-            return Flowable.just(News("", "", "", listDbArticles))
-        }
-    }
-
-    private suspend fun insertNewsIntoDB(repositoryResult: Flowable<ApiNews>) {
-        dbNews.newsDao().updateNews(
-            dbMapper?.mapDomainNewsToDbNews(repositoryResult.blockingFirst()) ?: listOf()
-        )
-        Log.d(
-            "da li ce uci unutra * ",
-            "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString() )
-    }
-
-    private suspend fun getArticlesFromDb(): List<Articles> {
-        return dbNews.newsDao().getNews().map {
-            dbMapper?.mapDBNewsListToNormalNewsList(it) ?: Articles(
-                0,
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-            )
-        }
+        return correctNewsResult
     }
 
     override suspend fun getNewsFromLocalDatabaseRoom(): Flowable<List<Articles>> {

@@ -50,7 +50,7 @@ class DbMapperImpl : DbMapper {
         }
     }
 
-    override fun mapDomainNewsToDbNews(newsList: ApiNews): List<DBNews> {
+    override fun mapDomainNewsToDbNews(newsList: News): List<DBNews> {
         return newsList.articles.map {
             with(it) {
                 DBNews(

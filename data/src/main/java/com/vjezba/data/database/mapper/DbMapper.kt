@@ -11,7 +11,7 @@ interface DbMapper {
 
     fun mapApiNewsToDomainNews(apiNews: ApiNews): News
 
-    fun mapDomainNewsToDbNews(newsList: ApiNews): List<DBNews>
+    fun mapDomainNewsToDbNews(newsList: News): List<DBNews>
 
     fun mapDBNewsListToNormalNewsList(articlesList: DBNews): Articles
 

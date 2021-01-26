@@ -3,6 +3,7 @@ package com.vjezba.androidjetpacknews.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,7 +76,7 @@ class IntroViewPagerFragment : Fragment(), Injectable {
                 )
             news_pager.adapter = pagerAdapter
 
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 news_pager.setCurrentItem(firstInitNewsPosition, false)
             }, 100)
 

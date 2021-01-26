@@ -38,16 +38,16 @@ import io.reactivex.Flowable
 interface ArticlesDao {
 
   @Query("SELECT * FROM news_table")
-  suspend fun getNews(): List<DBNews>
+  fun getNews(): List<DBNews>
 
   @Transaction
-  suspend fun updateNews(articles: List<DBNews>) {
+  fun updateNews(articles: List<DBNews>) {
     clearNews()
     insertAllNews(articles)
   }
 
   @Query("DELETE FROM news_table")
-  suspend fun clearNews()
+  fun clearNews()
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertAllNews(articles: List<DBNews>)

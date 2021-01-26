@@ -22,21 +22,35 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vjezba.data.database.NewsDatabase
+import com.vjezba.data.database.mapper.DbMapper
+import com.vjezba.data.networking.ConnectivityUtil
+import com.vjezba.data.networking.model.ApiNews
+import com.vjezba.data.networking.model.mapToNewsDomain
 import com.vjezba.domain.model.Articles
 import com.vjezba.domain.model.News
 import com.vjezba.domain.repository.NewsRepository
 import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
+import io.reactivex.internal.operators.flowable.FlowableBlockingSubscribe.subscribe
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.reactivestreams.Subscriber
 import javax.inject.Inject
 
 
 class NewsViewModel @Inject constructor(
-    val savedLanguages: NewsRepository
+    private val savedLanguages: NewsRepository,
+    private val dbNews: NewsDatabase,
+    private val dbMapper: DbMapper?,
+    private val connectivityUtil: ConnectivityUtil
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -48,7 +62,7 @@ class NewsViewModel @Inject constructor(
     val newsList: LiveData<News> = _newsMutableLiveData
 
     fun getNewsFromServer() {
-        viewModelScope.launch(Dispatchers.IO) {
+        if (connectivityUtil.isConnectedToInternet()) {
             savedLanguages.getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -60,6 +74,9 @@ class NewsViewModel @Inject constructor(
 
                     override fun onNext(response: News) {
                         Log.d(ContentValues.TAG, "Da li ce uci sim EEEE: ${response}")
+
+
+                        insertNewsIntoDB(response)
 
                         _newsMutableLiveData.value?.let { news ->
                             _newsMutableLiveData.value = response
@@ -76,6 +93,52 @@ class NewsViewModel @Inject constructor(
                     override fun onComplete() {}
                 })
         }
+        else {
+            viewModelScope.launch(Dispatchers.IO) {
+                val listDbArticles = getArticlesFromDb()
+
+                val newsFromDb = News("", "", "", listDbArticles)
+
+                withContext(Dispatchers.Main) {
+                    _newsMutableLiveData.value?.let { news ->
+                        _newsMutableLiveData.value = newsFromDb
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getArticlesFromDb(): List<Articles> {
+        return dbNews.newsDao().getNews().map {
+            dbMapper?.mapDBNewsListToNormalNewsList(it) ?: Articles(
+                0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
+        }
+    }
+
+    private fun insertNewsIntoDB(repositoryResult: News) {
+
+        Observable.fromCallable {
+
+            dbNews.newsDao().updateNews(
+                dbMapper?.mapDomainNewsToDbNews(repositoryResult) ?: listOf()
+                //dbMapper?.mapDomainNewsToDbNews(repositoryResult.blockingFirst()) ?: listOf()
+            )
+            Log.d(
+                "da li ce uci unutra * ",
+                "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString() )
+
+        }
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                Log.d( "Hoce spremiti vijesti","Inserted ${  repositoryResult.articles.size} news from API in DB...")
+            }
     }
 
 }

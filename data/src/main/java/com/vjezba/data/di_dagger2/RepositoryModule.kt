@@ -30,7 +30,7 @@ import dagger.Provides
 class RepositoryModule {
 
     @Provides
-    fun provideAllNewsFromRestApiNetworkOrFromRoom(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper, connectivityUtil: ConnectivityUtil) : NewsRepository {
-        return NewsRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper, connectivityUtil)
+    fun provideAllNewsFromRestApiNetworkOrFromRoom(newsDatabase: NewsDatabase, githubRepositoryApi: GithubRepositoryApi, dbMapper : DbMapper) : NewsRepository {
+        return NewsRepositoryImpl(newsDatabase, githubRepositoryApi, dbMapper)
     }
 }
