@@ -99,7 +99,8 @@ class NewsViewModel @Inject constructor(
                 News("", "", "", listDbArticles)
             }
                 .subscribeOn(Schedulers.io())
-                //.flatMap { source: News? -> Observable.fromArray(source) } // iterate through each item
+                //.flatMap { source: List<Articles> -> Observable.fromIterable(source) } // this flatMap is good if you want to iterate, go through list of objects.
+                //.flatMap { source: News? -> Observable.fromArray(source) or  } // .. iterate through each item
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { newsData: News? ->
                     // perform UI operation on each Item
