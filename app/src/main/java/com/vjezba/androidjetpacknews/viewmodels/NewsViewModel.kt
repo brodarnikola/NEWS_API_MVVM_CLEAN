@@ -73,8 +73,6 @@ class NewsViewModel @Inject constructor(
                     }
 
                     override fun onNext(response: News) {
-                        Log.d(ContentValues.TAG, "Da li ce uci sim EEEE: ${response}")
-
 
                         insertNewsIntoDB(response)
 
@@ -94,17 +92,22 @@ class NewsViewModel @Inject constructor(
                 })
         }
         else {
-            viewModelScope.launch(Dispatchers.IO) {
+
+            Observable.fromCallable {
                 val listDbArticles = getArticlesFromDb()
 
-                val newsFromDb = News("", "", "", listDbArticles)
-
-                withContext(Dispatchers.Main) {
+                News("", "", "", listDbArticles)
+            }
+                .subscribeOn(Schedulers.io())
+                //.flatMap { source: News? -> Observable.fromArray(source) } // iterate through each item
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { newsData: News? ->
+                    // perform UI operation on each Item
                     _newsMutableLiveData.value?.let { news ->
-                        _newsMutableLiveData.value = newsFromDb
+                        _newsMutableLiveData.value = newsData
                     }
                 }
-            }
+                .subscribe()
         }
     }
 
